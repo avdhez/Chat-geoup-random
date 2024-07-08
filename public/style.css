@@ -16,6 +16,12 @@ left: 50;
   
 }
 
+#online-users {
+  background-color: #f4f4f9;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
 attach {
   display: inline-block;
   width: 40px;
