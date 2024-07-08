@@ -97,3 +97,7 @@ function loadMessages() {
       messages.forEach(displayMessage);
     });
 }
+
+window.addEventListener('load', () => {
+  loadMessages();
+});
