@@ -2,7 +2,7 @@
    
 body {
 width: 97%;
-height: 97%;
+height: 100%;
 overflow: hidden;
   font-family: "jost";
   font-weight: 900;
@@ -59,6 +59,7 @@ attach {
 }
 
 #username-prompt {
+backdrop-filter: blur(100px);
   position: absolute;
   top: 50;
   left: 50;
