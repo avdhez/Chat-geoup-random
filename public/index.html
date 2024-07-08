@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="stylesnew.css">
 </head>
 <body>
   <div id="username-prompt">
     <label for="username">Enter your username:</label>
-    <input type="text" id="username">
+    <input  type="text" id="username">
     <button id="save-username">Save</button>
   </div>
   <div id="chat-container">
@@ -17,8 +17,10 @@
     <div id="typing-notification"></div>
     <form id="message-form">
       <input type="text" id="message-input" placeholder="Type a message...">
-      <input type="file" id="file-input">
       <button type="submit">Send</button>
+     <label for="file-input"><attach>ATTACH FILE</attach></label>
+     <input type="file" id="file-input">
+      
     </form>
   </div>
   <script src="/socket.io/socket.io.js"></script>
