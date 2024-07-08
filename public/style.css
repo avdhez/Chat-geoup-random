@@ -10,13 +10,17 @@ body {
 }
 
 #username-prompt {
-  display: flex;
+
+  display: block;
+  position: sticky;
+  left: 50;
+  top: 50;
   flex-direction: column;
   align-items: center;
 }
 
 #chat-container {
-  display: none;
+  display: block;
   width: 100%;
   max-width: 600px;
   border: 1px solid #ccc;
