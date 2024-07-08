@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://avdhez:2004@leech.pg1bvd7.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('<YOUR_MONGODB_ATLAS_URI>', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -37,7 +37,8 @@ const messageSchema = new mongoose.Schema({
 
 const Message = mongoose.model('Message', messageSchema);
 
-// Routes
+let onlineUsers = {};
+
 app.post('/upload', upload.single('file'), (req, res) => {
   res.json({ filename: req.file.filename });
 });
@@ -52,9 +53,13 @@ app.get('/messages', async (req, res) => {
   }
 });
 
-// Socket.io connection
 io.on('connection', (socket) => {
   console.log('A user connected');
+
+  socket.on('userConnected', (username) => {
+    onlineUsers[socket.id] = username;
+    io.emit('onlineUsers', Object.values(onlineUsers));
+  });
 
   socket.on('newMessage', async (data) => {
     const { username, text, replyTo, multimedia } = data;
@@ -76,6 +81,18 @@ io.on('connection', (socket) => {
         replyTo: message.replyTo,
         multimedia: message.multimedia
       });
+
+      if (replyTo) {
+        const originalMessage = await Message.findById(replyTo);
+        const recipientSocketId = Object.keys(onlineUsers).find(key => onlineUsers[key] === originalMessage.username);
+
+        if (recipientSocketId) {
+          io.to(recipientSocketId).emit('replyNotification', {
+            from: username,
+            text
+          });
+        }
+      }
     } catch (error) {
       console.error('Error saving message:', error);
     }
@@ -87,6 +104,8 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
+    delete onlineUsers[socket.id];
+    io.emit('onlineUsers', Object.values(onlineUsers));
   });
 });
 
