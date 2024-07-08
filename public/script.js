@@ -10,11 +10,12 @@ const usernameInput = document.getElementById('username');
 
 let username = localStorage.getItem('username');
 
-if (!username) {
-  usernamePrompt.style.display = 'block';
-} else {
+if (username) {
+  usernamePrompt.style.display = 'none';
   document.getElementById('chat-container').style.display = 'block';
   loadMessages();
+} else {
+  usernamePrompt.style.display = 'block';
 }
 
 saveUsernameBtn.addEventListener('click', () => {
@@ -99,5 +100,7 @@ function loadMessages() {
 }
 
 window.addEventListener('load', () => {
-  loadMessages();
+  if (username) {
+    loadMessages();
+  }
 });
