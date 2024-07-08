@@ -10,17 +10,14 @@ body {
 }
 
 #username-prompt {
-
-  display: block;
-  position: sticky;
-  left: 50;
-  top: 50;
+  display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 #chat-container {
-  display: block;
+  display: none;
   width: 100%;
   max-width: 600px;
   border: 1px solid #ccc;
@@ -40,6 +37,7 @@ body {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
+  background-color: #f8f8f8;
 }
 
 .message .username {
@@ -92,11 +90,15 @@ form button:hover {
   background-color: #0056b3;
 }
 
-.message {
-  background-color: #f8f8f8;
-}
-
 .message.own {
   background-color: #e0f7fa;
   text-align: right;
+}
+
+@media (max-width: 600px) {
+  #chat-container {
+    max-width: 100%;
+    border-radius: 0;
+    border: none;
+  }
 }
