@@ -1,89 +1,99 @@
 const socket = io();
-
 const messagesContainer = document.getElementById('messages');
 const messageForm = document.getElementById('message-form');
-const usernameInput = document.getElementById('username');
-const messageInput = document.getElementById('message');
-const fileUpload = document.getElementById('file-upload');
+const messageInput = document.getElementById('message-input');
+const fileInput = document.getElementById('file-input');
 const typingNotification = document.getElementById('typing-notification');
+const usernamePrompt = document.getElementById('username-prompt');
+const saveUsernameBtn = document.getElementById('save-username');
+const usernameInput = document.getElementById('username');
 
-let typingTimeout;
+let username = localStorage.getItem('username');
 
-// Fetch existing messages
-fetch('/chat/messages')
-  .then(response => response.json())
-  .then(data => {
-    data.forEach(displayMessage);
-  });
+if (!username) {
+  usernamePrompt.style.display = 'block';
+} else {
+  document.getElementById('chat-container').style.display = 'block';
+  loadMessages();
+}
 
-// Display messages
+saveUsernameBtn.addEventListener('click', () => {
+  username = usernameInput.value;
+  if (username) {
+    localStorage.setItem('username', username);
+    usernamePrompt.style.display = 'none';
+    document.getElementById('chat-container').style.display = 'block';
+    loadMessages();
+  }
+});
+
+messageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const text = messageInput.value;
+
+  if (text) {
+    const data = { username, text, replyTo: null };
+
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          data.multimedia = result.filename;
+          socket.emit('newMessage', data);
+          messageInput.value = '';
+          fileInput.value = '';
+        });
+    } else {
+      socket.emit('newMessage', data);
+      messageInput.value = '';
+    }
+  }
+});
+
+messageInput.addEventListener('input', () => {
+  socket.emit('typing', { username });
+});
+
+socket.on('message', (data) => {
+  displayMessage(data);
+});
+
+socket.on('typing', (data) => {
+  typingNotification.textContent = data.username ? `${data.username} is typing...` : '';
+});
+
 function displayMessage(data) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
+
   messageElement.innerHTML = `
     <span class="username">${data.username}</span>
     <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>
     <p>${data.text}</p>
     ${data.multimedia ? `<img src="/uploads/${data.multimedia}" alt="Multimedia" style="max-width: 100%;">` : ''}
   `;
+
+  if (data.username === username) {
+    messageElement.classList.add('own');
+  } else {
+    messageElement.classList.add('other');
+  }
+
   messagesContainer.appendChild(messageElement);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Send message
-messageForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const username = usernameInput.value.trim();
-  const text = messageInput.value.trim();
-
-  if (!username || !text) return;
-
-  const data = {
-    username,
-    text,
-    timestamp: new Date(),
-  };
-
-  if (fileUpload.files.length > 0) {
-    const formData = new FormData();
-    formData.append('file', fileUpload.files[0]);
-
-    fetch('/chat/upload', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(fileData => {
-        data.multimedia = fileData.filename;
-        socket.emit('message', data);
-        displayMessage(data);
-        messageInput.value = '';
-        fileUpload.value = '';
-      });
-  } else {
-    socket.emit('message', data);
-    displayMessage(data);
-    messageInput.value = '';
-  }
-});
-
-// Typing notification
-messageInput.addEventListener('input', () => {
-  socket.emit('typing', { username: usernameInput.value });
-
-  clearTimeout(typingTimeout);
-  typingTimeout = setTimeout(() => {
-    socket.emit('typing', { username: '' });
-  }, 1000);
-});
-
-socket.on('message', displayMessage);
-
-socket.on('typing', (data) => {
-     if (data.username) {
-       typingNotification.textContent = `${data.username} is typing...`;
-     } else {
-       typingNotification.textContent = '';
-     }
-   });
+function loadMessages() {
+  fetch('/messages')
+    .then(response => response.json())
+    .then(messages => {
+      messages.forEach(displayMessage);
+    });
+}
