@@ -101,4 +101,15 @@ form button:hover {
     border-radius: 0;
     border: none;
   }
+
+  form {
+    flex-direction: column;
+  }
+
+  form input[type="text"],
+  form input[type="file"],
+  form button {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }
