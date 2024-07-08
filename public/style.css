@@ -1,54 +1,41 @@
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f0f0;
-  margin: 0;
+}
+
+#username-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #chat-container {
+  display: none;
   width: 100%;
   max-width: 600px;
-  background: #fff;
-  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #messages {
-  height: 400px;
-  overflow-y: scroll;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-}
-
-#message-form {
-  display: flex;
-  flex-direction: column;
-}
-
-#message-form input,
-#message-form textarea,
-#message-form button {
   padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ddd;
-}
-
-#message-form button {
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
-}
-
-#message-form button:hover {
-  background-color: #218838;
+  max-height: 400px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ccc;
 }
 
 .message {
+  margin-bottom: 10px;
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-radius: 5px;
 }
 
 .message .username {
@@ -56,11 +43,56 @@ body {
 }
 
 .message .timestamp {
+  color: gray;
   font-size: 0.8em;
-  color: #999;
+  margin-left: 5px;
 }
 
 #typing-notification {
-  font-size: 0.9em;
-  color: #888;
+  padding: 10px;
+  font-style: italic;
+  color: gray;
+  border-bottom: 1px solid #ccc;
+}
+
+form {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+form input[type="text"],
+form input[type="file"],
+form button {
+  margin-right: 10px;
+}
+
+form input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+.message {
+  background-color: #f8f8f8;
+}
+
+.message.own {
+  background-color: #e0f7fa;
+  text-align: right;
 }
