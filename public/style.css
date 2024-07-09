@@ -98,7 +98,7 @@ backdrop-filter: blur(100px);
   border-radius: 5px;
   background-color: black;
   box-shadow: 0 0 10px;
- height: 96%;
+ height: 90%;
 }
 
 #messages {
@@ -107,7 +107,7 @@ backdrop-filter: blur(100px);
   padding: 10px;
   height: 460px;
   overflow-y: auto;
-  border: 2px solid white;
+  border: 0px solid white;
 border-radius: 5px;
 }
 
