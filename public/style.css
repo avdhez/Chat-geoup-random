@@ -1,4 +1,10 @@
  @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+.reply-btn {
+color: red;
+border: 0px solid;
+background: black;
+}
    
 body {
 width: 97%;
@@ -108,8 +114,8 @@ font-weight: 900;
   font-family: "jost";
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 5px;
-border-bottom: 3px solid white;
+  border-radius: 0px;
+border-bottom: 1px solid white;
 }
 
 .message .username {
@@ -178,8 +184,8 @@ font-weight: 900;
   font-family: "jost";
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 5px;
-border-bottom: 3px solid white;
+  border-radius: 0px;
+border-bottom: 1px solid white;
 }
 
 
