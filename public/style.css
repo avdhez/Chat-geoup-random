@@ -98,6 +98,7 @@ backdrop-filter: blur(100px);
   border-radius: 5px;
   background-color: black;
   box-shadow: 0 0 10px;
+ height: 96%;
 }
 
 #messages {
@@ -106,7 +107,8 @@ backdrop-filter: blur(100px);
   padding: 10px;
   height: 460px;
   overflow-y: auto;
-  border-bottom: 1px solid #ccc;
+  border: 2px solid white;
+border-radius: 5px;
 }
 
 .message {  
@@ -121,11 +123,12 @@ color: white;
 
 .message .username {
   font-weight: bold;
+color: red;
 }
 
 .message .timestamp {
   color: gray;
-  font-size:5px;
+  font-size:10px;
   margin-left: 5px;
 }
 
@@ -185,8 +188,8 @@ font-weight: 900;
   font-family: "jost";
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 0px;
-border-bottom: 1px solid white;
+  border: 2px solid white;
+border-radius: 5px;
 color: white;
 }
 
