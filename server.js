@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://avdhez:2004@leech.pg1bvd7.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('<YOUR_MONGODB_ATLAS_URI>', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -32,7 +32,8 @@ const messageSchema = new mongoose.Schema({
   text: String,
   timestamp: { type: Date, default: Date.now },
   replyTo: mongoose.Schema.Types.ObjectId,
-  multimedia: String
+  multimedia: String,
+  taggedUsers: [String]
 });
 
 const Message = mongoose.model('Message', messageSchema);
@@ -62,13 +63,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('newMessage', async (data) => {
-    const { username, text, replyTo, multimedia } = data;
+    const { username, text, replyTo, multimedia, taggedUsers } = data;
 
     const message = new Message({
       username,
       text,
       replyTo,
-      multimedia
+      multimedia,
+      taggedUsers
     });
 
     try {
@@ -79,7 +81,18 @@ io.on('connection', (socket) => {
         text: message.text,
         timestamp: message.timestamp,
         replyTo: message.replyTo,
-        multimedia: message.multimedia
+        multimedia: message.multimedia,
+        taggedUsers: message.taggedUsers
+      });
+
+      taggedUsers.forEach(taggedUser => {
+        const recipientSocketId = Object.keys(onlineUsers).find(key => onlineUsers[key] === taggedUser);
+        if (recipientSocketId) {
+          io.to(recipientSocketId).emit('tagNotification', {
+            from: username,
+            text
+          });
+        }
       });
 
       if (replyTo) {
